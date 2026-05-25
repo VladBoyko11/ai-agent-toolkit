@@ -1,0 +1,34 @@
+# Secrets and local credentials
+.env
+.env.*
+*.env
+*.local
+*.secret
+secrets/
+
+# Agent runtime state, caches, and histories
+cache/
+caches/
+sessions/
+history.jsonl
+file-history/
+paste-cache/
+shell-snapshots/
+telemetry/
+logs/
+*.log
+
+# Databases and generated state
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
