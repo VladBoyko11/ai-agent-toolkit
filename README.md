@@ -26,6 +26,7 @@ Two scopes are tracked:
 | Skill | Purpose |
 |-------|---------|
 | `saasjet-coding-standards` | SaaSJet conventions + the 15 mandatory development rules for TS/JS/React/Forge/ADS. |
+| `bitbucket-api` | Read Bitbucket Cloud (pipelines, step logs, PRs, commits) via the REST API instead of the browser. Needs `BITBUCKET_EMAIL` + `BITBUCKET_API_TOKEN` as user env vars — see "Bitbucket API token setup" below. |
 
 > `~/.claude/skills/generate-ai-docs` was empty on this machine, so it is not tracked.
 
@@ -64,6 +65,40 @@ Copy-Item .\projects\time-in-status\commands\* "$repo\.claude\commands\" -Recurs
 ```
 
 On macOS/Linux use `cp -R ./claude/agents/* ~/.claude/agents/` etc.
+
+## Bitbucket API token setup
+
+The `bitbucket-api` skill needs two **user-level environment variables** — never commit the token itself, only these instructions.
+
+1. Create an API token: Atlassian account → **Security** → **Create and manage API tokens** → **Create API token**. Give it repository/pipeline/PR read scopes (`read:repository:bitbucket`, `read:pipeline:bitbucket`, `read:pullrequest:bitbucket`); add matching `write:*` scopes only if you'll use write calls.
+2. Set the two variables so every new shell picks them up.
+
+**macOS (zsh, the default shell since Catalina):**
+
+```bash
+echo 'export BITBUCKET_EMAIL="you@saasjet.com"' >> ~/.zshrc
+echo 'export BITBUCKET_API_TOKEN="paste-your-token-here"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+If your login shell is bash instead, append to `~/.bash_profile` (or `~/.bashrc`) the same way.
+
+3. Verify (this only proves the vars are set — it never prints the token):
+
+```bash
+[ -n "$BITBUCKET_EMAIL" ] && [ -n "$BITBUCKET_API_TOKEN" ] && echo "both set" || echo "missing"
+```
+
+4. Restart Claude Code (or open a new terminal) so the new shell environment is picked up.
+
+**Windows (PowerShell)** — same two variables, persisted per-user:
+
+```powershell
+[Environment]::SetEnvironmentVariable('BITBUCKET_EMAIL', 'you@saasjet.com', 'User')
+[Environment]::SetEnvironmentVariable('BITBUCKET_API_TOKEN', (Read-Host 'Bitbucket API token'), 'User')
+```
+
+`Read-Host` prompts for the token separately so it never lands in shell history.
 
 ## Safety
 
